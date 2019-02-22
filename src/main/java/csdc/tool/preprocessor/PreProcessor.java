@@ -41,12 +41,12 @@ public class PreProcessor {
     private String startContent = "一、";
     @NonNull
     private String endContent = "三、";
-    private String section1;
-    private String section2;
-    private String section3;
+    private String[] section1;
+    private String[] section2;
+    private String[] section3;
     public int err = 0;
 
-    public PreProcessor(String srcPath, String dstPath, String section1, String section2, String section3) {
+    public PreProcessor(String srcPath, String dstPath, String[] section1, String[] section2, String[] section3) {
         this.srcPath = srcPath;
         this.dstPath = dstPath;
         this.section1 = section1;
@@ -300,37 +300,45 @@ public class PreProcessor {
      * @throws BadApplicationContentException
      */
     private String splitContent(String rawBody, File file, boolean target) throws BadApplicationContentException, IOException {
+        String[] startC;
+        String[] endC;
         if (target) {
-            startContent = section1;
-            endContent = section2;
+            startC = section1;
+            endC = section2;
         } else {
-            startContent = section2;
-            endContent = section3;
+            startC = section2;
+            endC = section3;
         }
-        int start = rawBody.indexOf(startContent + "\n");
-        if (start == -1) {
-            start = rawBody.indexOf(startContent + ":\n");
-        }
-        if (start == -1) {
-            start = rawBody.indexOf(startContent + "：\n");
-        }
+       int start = index(rawBody, startC);
         if (start == -1) {
             throw new BadApplicationContentException(file.getAbsolutePath());
         }
         rawBody = rawBody.substring(start);
-        int end = rawBody.indexOf(endContent + "\n");
-        if (end == -1) {
-            end = rawBody.indexOf(endContent + ":\n");
-        }
-        if (end == -1) {
-            end = rawBody.indexOf(endContent + "：\n");
-        }
+        int end = index(rawBody, endC);
         if (end == -1) {
             throw new BadApplicationContentException(file.getAbsolutePath());
         }
         String body = rawBody.substring(0 + startContent.length(), end).trim().replace("\t", "");
         body = body.substring(0, body.lastIndexOf("\n")).replace("\n", "").replace(" ", "");
         return body;
+
+    }
+
+    private int index(String content, String[] tar){
+        int start = -1;
+        for (String s : tar) {
+            start = content.indexOf(s + "\n");
+            if (start == -1) {
+                start = content.indexOf(s + ":\n");
+            }
+            if (start == -1) {
+                start = content.indexOf(s + "：\n");
+            }
+            if (start != -1) {
+                return start;
+            }
+        }
+        return start;
 
     }
 

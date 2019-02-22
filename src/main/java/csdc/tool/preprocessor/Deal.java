@@ -9,14 +9,14 @@ import java.util.List;
  */
 public class Deal {
     public static void main(String[] args) {
-        String section1 = "研究目标";
-        String section2 = "研究内容";
-        String section3 = "难点";
+        String[] section1 = new String[]{"研究目标", "目标"};
+        String[] section2 = new String[]{"研究内容", "内容"};
+        String[] section3 = new String[]{"重点难点", "难点"};
 
         // 待处理的doc文档路径
         String docPath = "C:\\Users\\csdc01\\smdb_lda_data\\data\\doc\\2018";
         // 处理后生成的txt的存储路径
-        String txtPath = "C:\\Users\\csdc01\\smdb_lda_data\\data\\doc\\2018";
+        String txtPath = "C:\\Users\\csdc01\\smdb_lda_data\\data\\doc";
         // 记录不存在开始和截止内容的文档
         List<String> errorIndexDocs;
 
